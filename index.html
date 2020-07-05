@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html>
   <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="stylesheet" href="bootstrap.min.css" />
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.1/js/all.min.js"></script>
-    <script src="app.js"></script>
     <title>Account</title>
   </head>
   <body>
@@ -18,7 +18,7 @@
         <div class="col-12 text-center mt-5">
           <div><h1>My payments</h1></div>
         </div>
-        <div class="col-11 text-right">
+        <div class="col-md-11 text-right">
           <a
             href="#"
             class="btn btn-primary"
@@ -27,8 +27,8 @@
             >New payment</a
           >
         </div>
-        <div class="col-11 mt-3">
-          <div class="row justify-content-md-center">
+        <div class="col-md-11 mt-3">
+          <div class="row">
             <div class="col-1 border">
               <strong>ID</strong>
             </div>
@@ -45,6 +45,8 @@
               <strong>Actions</strong>
             </div>
           </div>
+        </div>
+        <div class="col-md-11" id="payments">
         </div>
       </div>
     </div>
@@ -70,16 +72,12 @@
               <span aria-hidden="true">&times;</span>
             </button>
           </div>
-          <form>
+          <form id="payment-form">
+            <div id="modal-message" class="text-center mt-2 d-block font-weight-bold"></div>
             <div class="modal-body">
               <div class="form-group">
                 <label for="concept">Concept</label>
-                <input
-                  type="text"
-                  class="form-control"
-                  id="concept"
-                  placeholder="Restaurants, books, gas..."
-                />
+                <input type="text" class="form-control" id="concept" />
               </div>
               <div class="form-group">
                 <label for="date">Date</label>
@@ -87,9 +85,8 @@
               </div>
               <div class="form-group">
                 <label for="amount">Amount</label>
-                <input type="number" class="form-control" id="amount" />
+                <input type="number" class="form-control" step="0.01" id="amount" />
               </div>
-              <div class="form-group"></div>
             </div>
             <div class="modal-footer">
               <button
@@ -116,5 +113,6 @@
       integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI"
       crossorigin="anonymous"
     ></script>
+    <script src="app.js"></script>
   </body>
 </html>
