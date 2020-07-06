@@ -22,7 +22,7 @@ class Interface {
     const paymentContainter = document.getElementById("payments");
     const paymentRow = document.createElement("div");
     paymentRow.className = "row";
-    paymentRow.id = "pay-"+`${payment.id}`
+    paymentRow.id = "pay-"+payment.id;
     paymentRow.innerHTML = `
         <div class="col-1 border">
           <strong>${payment.id}</strong>
@@ -55,19 +55,52 @@ class Interface {
       element.parentElement.parentElement.remove();
   }
 
-  editPayment() {}
-
-  showMessage() {}
-
-  showMessageForm(text, status){
-      document.getElementById("modal-message").innerHTML =
-        `
-            <span class="text-${status}">${text}!</span>
-        `
+  editPayment(payment) {
+    document.getElementById("edit-payment-id").value = payment.id;
+    document.getElementById("edit-concept").value = payment.concept;
+    document.getElementById("edit-date").value = payment.date;
+    document.getElementById("edit-amount").value = payment.amount;
+    $("#editpaymentModal").modal();
   }
 
-  resetForm(){
-      document.getElementById("payment-form").reset();
+  editElement(payment){
+    const paymentRow = document.getElementById("pay-"+ payment.id);
+    paymentRow.innerHTML = `
+        <div class="col-1 border">
+          <strong>${payment.id}</strong>
+        </div>
+        <div class="col-2 border">
+            <strong>${payment.date}</strong>
+        </div>
+        <div class="col-3 border">
+            <strong>${payment.concept}</strong>
+        </div>
+        <div class="col-3 border">
+            <strong>$${payment.amount}</strong>
+        </div>
+        <div class="col-3 border">
+            <a href="#" class="btn btn-info" name="edit">
+                Edit
+            </a>
+            <a href="#" class="btn btn-danger" name="delete">
+                Delete
+            </a>
+        </div>        
+    `;
+  }
+
+  showMessageForm(text, status){
+        document.getElementById("modal-message").innerHTML =
+            `
+                <span class="text-${status}">${text}</span>
+            `;
+        setTimeout(()=>{
+            document.getElementById("modal-message").innerHTML = "";
+        },3000)
+  }
+
+  resetForm(idForm){
+    document.getElementById(`${idForm}`).reset();
   }
 }
 
@@ -82,30 +115,38 @@ document.getElementById("payment-form").addEventListener("submit", (e) => {
 
   const ui = new Interface();
   if(ui.addPayment(payment) == true){
-      ui.resetForm();
-      ui.showMessageForm('Payment recorded!', 'success')
+      ui.resetForm("payment-form");
+      ui.showMessageForm('Payment recorded', 'success')
   }
-
-  console.log(paymentsArray);
-
 });
 
 
 document.getElementById('payments').addEventListener('click', (e)=>{
     const ui = new Interface();
-
-    const clicked = e.target;
+    const clicked = e.target;   
+    paymentNumber = (clicked.parentElement.parentElement.id.slice(4))-1;
     
     if(clicked.name ==="delete"){
         ui.deletePayment(clicked);
-        paymentNumber = clicked.parentElement.parentElement.id.slice(4)
-        paymentsArray.splice(paymentNumber-1,1)
-        console.log(paymentsArray);
-
+        paymentsArray[paymentNumber].name = ""
+        paymentsArray[paymentNumber].concept = ""
+        paymentsArray[paymentNumber].amount = "" 
     }else if(clicked.name === "edit"){
-        alert("EDIT");
+        ui.editPayment(paymentsArray[paymentNumber]);
     }   
-    //ui.deletePayment()
-
-    //Usar splice para borrar del arreglo
 })
+
+
+document.getElementById("edit-payment-form").addEventListener("submit", (e) => {
+    e.preventDefault();
+    const payment = paymentsArray[document.getElementById("edit-payment-id").value-1];
+
+    payment.concept = document.getElementById("edit-concept").value;
+    payment.date = document.getElementById("edit-date").value;
+    payment.amount = document.getElementById("edit-amount").value;
+
+    const ui = new Interface();
+    ui.editElement(payment);
+    ui.resetForm("edit-payment-form");
+    $("#editpaymentModal").modal('hide');
+});
